@@ -1,7 +1,8 @@
 # Omni-GAN-DGP
 
 
-This repository contains code of CIFAR experiments for the paper, [Omni-GAN: On the Secrets of cGANs and Beyond](https://arxiv.org/abs/2011.13074).
+This repository contains the code for the paper, [Omni-GAN: On the Secrets of cGANs and Beyond](https://arxiv.org/abs/2011.13074). </br >
+In particular, it contains the code for the ImageNet and DGP experiments.
 
 
 
