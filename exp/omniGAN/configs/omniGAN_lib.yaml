@@ -1,0 +1,21 @@
+omniGAN_Generator128:
+  G_ch: 96
+  dim_z: 120
+  bottom_width: 4
+  resolution: 128
+  G_kernel_size: 3
+  G_attn: '64'
+  n_classes: 1000
+  G_shared: true
+  shared_dim: 128
+  hier: true
+  cross_replica: false
+  mybn: false
+  G_init: 'ortho'
+  G_param: 'SN'
+  norm_style: 'bn'
+  BN_eps: 1.e-5
+  SN_eps: 1.e-6
+  G_fp16: false
+  Generator:
+    weight_decay: 0.001

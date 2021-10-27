@@ -1,0 +1,296 @@
+root_obs: &root_obs s3://bucket-7001/ZhouPeng
+modelarts_download: &modelarts_download
+  data_root:
+    datapath_obs: '{global_cfg.root_obs}/keras/ImageNet.zip'
+    datapath: datasets/ImageNet.zip
+    overwrite: false
+    eval: true
+    unzip: true
+  inception_file:
+    datapath_obs: '{global_cfg.root_obs}/keras/ImageNet_hdf5/I256_inception_moments.npz'
+    datapath: '{global_cfg.inception_file}'
+    overwrite: false
+    eval: true
+  inceptionv3:
+    datapath_obs: '{global_cfg.root_obs}/keras/Omni-GAN-ImageNet/datasets/inception_v3_google-1a9a5a14.pth'
+    datapath: ~/.cache/torch/hub/checkpoints/inception_v3_google-1a9a5a14.pth
+    overwrite: false
+    eval: true
+
+train_ImageNet256:
+  args:
+    dataset: Ivariable
+    data_root: datasets/ImageNet/train
+    index_filename: datasets/ImageNet_train_index.npz
+    load_in_mem: false
+    resolution: 256
+    collate_fn:
+      min_size: 256
+      max_size: 256
+#      min_size: 64
+#      max_size: 256
+    num_workers: 16
+    batch_size: 128
+    num_G_accumulations: 2
+    num_D_accumulations: 2
+    num_D_steps: 2
+    G_lr: 1e-4
+    D_lr: 4e-4
+    D_B2: 0.999
+    G_B2: 0.999
+    G_attn: '64'
+    D_attn: '0'
+    G_nl: inplace_relu
+    D_nl: inplace_relu
+    SN_eps: 1e-6
+    BN_eps: 1e-5
+    adam_eps: 1e-6
+    G_ortho: 0.0
+    G_shared: true
+    G_init: ortho
+    D_init: ortho
+    hier: true
+    dim_z: 120
+    shared_dim: 128
+    G_eval_mode: true
+    G_ch: 96
+    D_ch: 96
+    ema: true
+    use_ema: true
+    ema_start: 20000
+    test_every: 2000
+    save_every: 1000
+    num_best_copies: 4
+    num_save_copies: 2
+    seed: 0
+    use_multiepoch_sampler: true
+    experiment_name: exp
+    model: exp.omni_inr_GAN.BigGAN_omni
+    which_train_fn: exp.omni_inr_GAN.train_fns
+  Discriminator:
+    output_dim: 1002
+    weight_decay: 0.00001
+  Generator:
+    weight_decay: 0.0001
+    inr_net:
+      register_modules:
+        - exp.omni_inr_GAN.models.net_mlp
+      name: exp.omni_inr_GAN.models.net_mlp.MLP
+      hidden_list:
+        - 96
+        - 96
+  omni_loss:
+    mode: p_and_n
+    gamma: 1.0
+    margin: 0.0
+  inception_file: datasets/ImageNet_hdf5/I256_inception_moments.npz
+  root_obs: *root_obs
+  modelarts_download: *modelarts_download
+
+
+_build_generator_256: &_build_generator_256
+  register_modules:
+    - exp.omni_inr_GAN.models.inr_omniGAN
+  name: exp.omni_inr_GAN.models.inr_omniGAN.Generator
+  G_ch: 96
+  dim_z: 120
+  bottom_width: 4
+  resolution: 256
+  G_kernel_size: 3
+  G_attn: '64'
+  n_classes: 1000
+  G_shared: true
+  shared_dim: 128
+  hier: true
+  cross_replica: false
+  mybn: false
+  G_init: 'ortho'
+  G_param: 'SN'
+  norm_style: 'bn'
+  BN_eps: 1.e-5
+  SN_eps: 1.e-6
+  G_fp16: false
+  skip_init: false
+  no_optim: false
+  inr_net_cfg:
+    register_modules:
+      - exp.omni_inr_GAN.models.net_mlp
+    name: exp.omni_inr_GAN.models.net_mlp.MLP
+    hidden_list: [96, 96]
+  optim_cfg:
+    lr: 1.e-4
+    betas: [0., 0.999]
+    eps: 1.e-6
+    weight_decay: 0.001
+
+
+train_ImageNet256_build_net:
+  args:
+    dataset: Ivariable
+    data_root: datasets/ImageNet/train
+    index_filename: datasets/ImageNet_train_index.npz
+    load_in_mem: false
+    resolution: 256
+    collate_fn:
+      min_size: 256
+      max_size: 256
+#      min_size: 64
+#      max_size: 256
+    num_workers: 16
+    batch_size: 256
+    num_G_accumulations: 1
+    num_D_accumulations: 1
+    num_D_steps: 2
+    G_lr: 1e-4
+    D_lr: 4e-4
+    D_B2: 0.999
+    G_B2: 0.999
+    G_attn: '64'
+    D_attn: '0'
+    G_nl: inplace_relu
+    D_nl: inplace_relu
+    SN_eps: 1e-6
+    BN_eps: 1e-5
+    adam_eps: 1e-6
+    G_ortho: 0.0
+    G_shared: true
+    G_init: ortho
+    D_init: ortho
+    hier: true
+    dim_z: 120
+    shared_dim: 128
+    G_eval_mode: true
+    G_ch: 96
+    D_ch: 96
+    ema: true
+    use_ema: true
+    ema_start: 20000
+    test_every: 2000
+    save_every: 1000
+    num_best_copies: 4
+    num_save_copies: 2
+    seed: 0
+    use_multiepoch_sampler: true
+    experiment_name: exp
+    model: exp.omni_inr_GAN.BigGAN_omni
+    which_train_fn: exp.omni_inr_GAN.train_fns
+  Discriminator:
+    output_dim: 1002
+    weight_decay: 0.00001
+  Generator: *_build_generator_256
+  omni_loss:
+    mode: p_and_n
+    gamma: 1.0
+    margin: 0.0
+  inception_file: datasets/ImageNet_hdf5/I256_inception_moments.npz
+  root_obs: s3://bucket-7001/ZhouPeng
+  modelarts_download:
+    data_root:
+      datapath_obs: '{global_cfg.root_obs}/keras/ImageNet.zip'
+      datapath: datasets/ImageNet.zip
+      overwrite: false
+      eval: true
+      unzip: true
+    inception_file:
+      datapath_obs: '{global_cfg.root_obs}/keras/ImageNet_hdf5/I256_inception_moments.npz'
+      datapath: '{global_cfg.inception_file}'
+      overwrite: false
+      eval: true
+    inceptionv3:
+      datapath_obs: '{global_cfg.root_obs}/keras/Omni-GAN-ImageNet/datasets/inception_v3_google-1a9a5a14.pth'
+      datapath: ~/.cache/torch/hub/checkpoints/inception_v3_google-1a9a5a14.pth
+      overwrite: false
+      eval: true
+
+
+eval_ImageNet256:
+  base: train_ImageNet256_build_net
+  evaluation:
+    eval: true
+#    G_ema_model: "datasets/omniInrGAN256_20210126_161550_248/\
+#    exp_v3/G_ema_best_IS0.pth"
+#    G_ema_best_IS0: IS=338.328 FID=5.2928
+#    G_ema_best_IS1: IS=338.242 FID=5.2880
+#    G_ema_best_IS2: IS=342.699 FID=5.1826
+#    G_ema_best_IS3: IS=340.930 FID=5.2935
+#    G_ema_best_FID0: IS=330.619 FID=5.3412
+#    G_ema_best_FID1: IS=341.583 FID=5.1938
+#    G_ema_best_FID2: IS=333.427 FID=5.2916
+#    G_ema_best_FID3: IS=333.174 FID=5.2862
+    G_ema_model: "datasets/omniInrGAN256_20210126_161550_248/\
+    exp/G_ema_best_IS0.pth"
+#    G_ema_best_IS0: IS=347.925 FID=5.0486
+#    G_ema_best_IS1: IS=353.194 FID=5.0849
+#    G_ema_best_IS2: IS=353.276 FID=5.0455
+#    G_ema_best_IS3: IS=348.653 FID=5.0371
+#    G_ema_best_FID0: IS=338.958 FID=5.1483
+#    G_ema_best_FID1: IS=341.583 FID=5.1926
+#    G_ema_best_FID2: IS=339.709 FID=5.1181
+#    G_ema_best_FID3: IS=340.212 FID=5.2082
+
+
+eval_ImageNet256_val:
+  base: train_ImageNet256_build_net
+  inception_file: datasets/ImageNet_hdf5/I256_val_inception_moments.npz
+  evaluation:
+    eval: true
+#    G_ema_best_IS0: IS=338.328 FID=6.4876
+#    G_ema_best_IS1: IS=338.242 FID=6.4705
+#    G_ema_best_IS2: IS=342.699 FID=6.4463
+#    G_ema_best_IS3: IS=340.930 FID=6.5328
+    G_ema_model: "datasets/omniInrGAN256_20210126_161550_248/exp/\
+      G_ema_best_IS0.pth"
+#    G_ema_best_FID0: IS=330.619 FID=6.3750
+#    G_ema_best_FID1: IS=341.583 FID=6.3950
+#    G_ema_best_FID2: IS=333.427 FID=6.3697
+#    G_ema_best_FID3: IS=340.212 FID=6.3983
+#    G_ema_model: "datasets/omniInrGAN128_20201228_085846_586/exp/\
+#      G_ema_best_FID0.pth"
+
+eval_truncation_ImageNet256:
+  Generator: *_build_generator_256
+  args:
+    batch_size: 256
+    accumulate_stats: false
+  weights_root: "datasets/omniInrGAN256_20210126_161550_248/"
+  pretrained_model: "datasets/omniInrGAN256_20210126_161550_248/exp/\
+    G_ema_best_IS3.pth"
+  inception_file: datasets/ImageNet_hdf5/I256_inception_moments.npz
+
+
+sample_web:
+  port: 8506
+  sidebar:
+    sidebar_name: "Sample Omni-INR-GAN"
+  image_list:
+    image_list_file:
+      - "template_lib/datasets/images/image_list.txt"
+    columns: ['path', ]
+    default_index: 0
+  sample_cfg:
+    register_modules:
+      - exp.omni_inr_GAN.scripts.sample_web
+    name: exp.omni_inr_GAN.scripts.sample_web.SampleWeb
+    G_weight: "datasets/omniInrGAN256_20210126_161550_248/exp/\
+          G_ema_best_IS3.pth"
+    G_cfg:
+      base: _build_generator_256
+    batch_size: 9
+    z_var: 1.
+    y: 153
+    y_choice: [143, 153, 449, 979, 985]
+    mode:
+      - 'sample_SR'
+      - 'sample_interpolation'
+      - 'sample_batch'
+    saved_size: '[32, 64, 128, 256, 512, 1024, 2048]'
+    video_cfg:
+      start_ratio: 0.125
+      max_ratio: 8
+      mid_ratio: 6
+      steps: "[0.2, 0.05]"
+      fps: 10
+    interp_cfg:
+
+
+

@@ -1,0 +1,51 @@
+get_data_loaders_Ivariable:
+  dataset: Ivariable
+  data_root: "datasets/ImageNet/train"
+  augment: false
+  batch_size: 2
+  num_workers: 0
+  shuffle: false
+  load_in_mem: false
+  pin_memory: true
+  drop_last: true
+  start_itr: 0
+  num_epochs: 100
+  use_multiepoch_sampler: true
+  collate_fn:
+    min_size: 128
+    max_size: 256
+  index_filename: "datasets/ImageNet_train_index.npz"
+
+
+inr_generator:
+  G_ch: 96
+  dim_z: 120
+  bottom_width: 4
+  resolution: 128
+  G_kernel_size: 3
+  G_attn: '64'
+  n_classes: 1000
+  G_shared: true
+  hier: true
+  cross_replica: false
+  mybn: false
+  G_init: 'ortho'
+  G_param: 'SN'
+  norm_style: 'bn'
+  BN_eps: 1.e-5
+  SN_eps: 1.e-6
+  G_fp16: false
+  Generator:
+    weight_decay: 0.001
+    inr_net:
+      name: "MLP"
+      hidden_list:
+        - 96
+        - 96
+        - 96
+        - 96
+
+
+
+
+

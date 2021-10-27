@@ -1,0 +1,163 @@
+_build_generator_128: &_build_generator_128
+  register_modules:
+    - exp.omni_inr_GAN.models.inr_omniGAN_ablation
+  name: exp.omni_inr_GAN.models.inr_omniGAN_ablation.Generator
+  G_ch: 96
+  dim_z: 120
+  bottom_width: 4
+  resolution: 128
+  G_kernel_size: 3
+  G_attn: '64'
+  n_classes: 1000
+  G_shared: true
+  shared_dim: 128
+  hier: true
+  cross_replica: false
+  mybn: false
+  G_init: 'ortho'
+  G_param: 'SN'
+  norm_style: 'bn'
+  BN_eps: 1.e-5
+  SN_eps: 1.e-6
+  G_fp16: false
+  skip_init: false
+  no_optim: false
+  inr_net_cfg:
+    register_modules:
+      - exp.omni_inr_GAN.models.net_mlp
+    name: exp.omni_inr_GAN.models.net_mlp.MLP
+    hidden_list: [96, 96]
+  optim_cfg:
+    lr: 1.e-4
+    betas: [0., 0.999]
+    eps: 1.e-6
+    weight_decay: 0.001
+
+
+_build_discriminator_128: &_build_discriminator_128
+  register_modules:
+    - exp.omni_inr_GAN.models.inr_omniGAN
+  name: exp.omni_inr_GAN.models.inr_omniGAN.Discriminator
+  D_ch: 96
+  D_wide: True
+  resolution: 128
+  D_kernel_size: 3
+  D_attn: '0'
+  n_classes: 1000
+  D_init: 'ortho'
+  D_param: 'SN'
+  SN_eps: 1.e-6
+  D_fp16: false
+  output_dim: 1002
+  optim_cfg:
+    lr: 4.e-4
+    betas: [0., 0.999]
+    eps: 1.e-6
+    weight_decay: 0.00001
+
+
+train_ImageNet128:
+  args:
+    dataset: Ivariable
+    data_root: datasets/ImageNet/train
+    index_filename: datasets/ImageNet_train_index.npz
+    load_in_mem: false
+    resolution: 128
+    collate_fn:
+      min_size: 128
+      max_size: 128
+#      min_size: 64
+#      max_size: 256
+    num_workers: 16
+    batch_size: 256
+    num_G_accumulations: 1
+    num_D_accumulations: 1
+    num_D_steps: 1
+    G_lr: 1e-4
+    D_lr: 4e-4
+    D_B2: 0.999
+    G_B2: 0.999
+    G_attn: '64'
+    D_attn: '0'
+    G_nl: inplace_relu
+    D_nl: inplace_relu
+    SN_eps: 1e-6
+    BN_eps: 1e-5
+    adam_eps: 1e-6
+    G_ortho: 0.0
+    G_shared: true
+    G_init: ortho
+    D_init: ortho
+    hier: true
+    dim_z: 120
+    shared_dim: 128
+    G_eval_mode: true
+    G_ch: 96
+    D_ch: 96
+    ema: true
+    use_ema: true
+    ema_start: 20000
+    test_every: 2000
+    save_every: 1000
+    num_best_copies: 4
+    num_save_copies: 2
+    seed: 0
+    use_multiepoch_sampler: true
+    experiment_name: exp
+    model: exp.omni_inr_GAN.BigGAN_omni
+    which_train_fn: exp.omni_inr_GAN.train_fns
+  Generator: *_build_generator_128
+  Discriminator: *_build_discriminator_128
+  omni_loss:
+    mode: p_and_n
+    gamma: 1.0
+    margin: 0.0
+  inception_file: datasets/ImageNet_hdf5/I128_inception_moments.npz
+  root_obs: s3://bucket-7001/ZhouPeng
+  modelarts_download:
+    data_root:
+      datapath_obs: '{global_cfg.root_obs}/keras/ImageNet.zip'
+      datapath: datasets/ImageNet.zip
+      overwrite: false
+      eval: true
+      unzip: true
+    inception_file:
+      datapath_obs: '{global_cfg.root_obs}/keras/ImageNet_hdf5/I128_inception_moments.npz'
+      datapath: '{global_cfg.inception_file}'
+      overwrite: false
+      eval: true
+    inceptionv3:
+      datapath_obs: '{global_cfg.root_obs}/keras/Omni-GAN-ImageNet/datasets/inception_v3_google-1a9a5a14.pth'
+      datapath: ~/.cache/torch/hub/checkpoints/inception_v3_google-1a9a5a14.pth
+      overwrite: false
+      eval: true
+
+train_ImageNet128_no_unfold:
+  base: train_ImageNet128
+  Generator:
+    register_modules:
+      - exp.omni_inr_GAN.models.inr_omniGAN_ablation
+    name: "exp.omni_inr_GAN.models.inr_omniGAN_ablation.\
+      Generator_no_unfold"
+
+train_ImageNet128_no_coord:
+  base: train_ImageNet128
+  Generator:
+    register_modules:
+      - exp.omni_inr_GAN.models.inr_omniGAN_ablation
+    name: "exp.omni_inr_GAN.models.inr_omniGAN_ablation.\
+      Generator_no_coord"
+
+train_ImageNet128_no_cell:
+  base: train_ImageNet128
+  Generator:
+    register_modules:
+      - exp.omni_inr_GAN.models.inr_omniGAN_ablation
+    name: "exp.omni_inr_GAN.models.inr_omniGAN_ablation.\
+      Generator_no_cell"
+
+
+
+
+
+

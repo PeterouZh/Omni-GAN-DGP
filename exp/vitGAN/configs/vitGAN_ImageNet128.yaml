@@ -1,0 +1,139 @@
+_build_CLN:
+  register_modules:
+    - exp.vitGAN.models.conditional_layer_norm
+  name: exp.vitGAN.models.conditional_layer_norm.CLN
+
+_build_ReductionAttention:
+  register_modules:
+    - exp.vitGAN.models.reduction_attention
+  name: exp.vitGAN.models.reduction_attention.ReductionAttention
+  dim: 64
+  num_heads: 1
+  qkv_bias: true
+  qk_scale: null
+  sr_ratio: 8
+
+_build_inr_net: &_build_inr_net
+  register_modules:
+    - exp.vitGAN.models.inr_net
+  name: exp.vitGAN.models.inr_net.InrNet
+#  in_dim: 64*9 + 2 + 2
+  out_dim: 3
+  spectral_norm: true
+  hidden_list: [64, 64]
+
+
+_build_Generator128:
+  register_modules:
+    - exp.vitGAN.models.transformer_GAN
+  name: exp.vitGAN.models.transformer_GAN.Generator
+  dim_z: 120
+  n_classes: 1000
+  G_shared: true
+  shared_dim: 128
+  hier: true
+  bottom_width: 4
+  channel: 64
+  use_sn: true
+  num_heads: [8, 4, 2, 1, 1]
+  sr_ratios: [1, 2, 4, 8, 16]
+  block_repeat: [4, 4, 4, 2, 1]
+  embed_dims: [512, 256, 128, 64, 64]
+  ff_dim_mul: 2
+  dropout: 0.
+  weight_decay: 0.001
+  inr_net_cfg: *_build_inr_net
+
+train_ImageNet128:
+  args:
+    dataset: I128_hdf5
+    data_root: "datasets/ImageNet_hdf5/ILSVRC128.hdf5"
+    num_workers: 8
+    batch_size: 256
+    num_G_accumulations: 1
+    num_D_accumulations: 1
+    num_D_steps: 1
+    G_lr: 1e-4
+    D_lr: 4e-4
+    D_B2: 0.999
+    G_B2: 0.999
+    G_attn: '64'
+    D_attn: '64'
+    G_nl: inplace_relu
+    D_nl: inplace_relu
+    SN_eps: 1e-6
+    BN_eps: 1e-5
+    adam_eps: 1e-6
+    G_ortho: 0.0
+    G_shared: true
+    G_init: ortho
+    D_init: ortho
+    hier: true
+    dim_z: 120
+    shared_dim: 128
+    G_eval_mode: true
+    G_ch: 96
+    D_ch: 96
+    ema: true
+    use_ema: true
+    ema_start: 20000
+    test_every: 2000
+    save_every: 1000
+    num_best_copies: 4
+    num_save_copies: 2
+    seed: 0
+    use_multiepoch_sampler: true
+    experiment_name: exp
+    model: exp.vitGAN.transformer_GAN
+    which_train_fn: exp.omniGAN.train_fns
+  Generator:
+    dim_z: 120
+    n_classes: 1000
+    G_shared: true
+    shared_dim: 128
+    hier: true
+    bottom_width: 8
+    channel: 3
+    use_sn: true
+    num_heads:
+      - 1
+      - 1
+      - 2
+      - 4
+    block_repeat:
+      - 10
+      - 10
+      - 10
+      - 9
+    ff_dim_mul: 4
+    dropout: 0.
+    weight_decay: 0.0001
+  Discriminator:
+    output_dim: 1002
+    weight_decay: 0.00001
+  omni_loss:
+    mode: p_and_n
+    gamma: 1.0
+    margin: 0.0
+  inception_file: "datasets/ImageNet_hdf5/\
+      I128_inception_moments.npz"
+  root_obs: "s3://bucket-7001/ZhouPeng"
+  modelarts_download:
+    data_root:
+      datapath_obs: "{global_cfg.root_obs}/keras/\
+        ImageNet_hdf5/ILSVRC128.hdf5"
+      datapath: "{global_cfg.data_root}"
+      overwrite: false
+      eval: true
+    inception_file:
+      datapath_obs: "{global_cfg.root_obs}/keras/\
+      ImageNet_hdf5/I128_inception_moments.npz"
+      datapath: "{global_cfg.inception_file}"
+      overwrite: false
+      eval: true
+    inceptionv3:
+      datapath_obs: "{global_cfg.root_obs}/keras/Omni-GAN-ImageNet/\
+              datasets/inception_v3_google-1a9a5a14.pth"
+      datapath: '/root/.cache/torch/hub/checkpoints/inception_v3_google-1a9a5a14.pth'
+      overwrite: false
+      eval: true

@@ -1,0 +1,116 @@
+root_obs: &root_obs "s3://bucket-7001/ZhouPeng"
+modelarts_download: &modelarts_download
+  data_root:
+    datapath_obs: "{global_cfg.root_obs}/keras/\
+      ImageNet_hdf5/ILSVRC256.hdf5"
+    datapath: "{global_cfg.data_root}"
+    overwrite: false
+    eval: true
+  inception_file:
+    datapath_obs: "{global_cfg.root_obs}/keras/\
+    ImageNet_hdf5/I256_inception_moments.npz"
+    datapath: "{global_cfg.inception_file}"
+    overwrite: false
+    eval: true
+  inceptionv3:
+    datapath_obs: "{global_cfg.root_obs}/keras/Omni-GAN-ImageNet/\
+            datasets/inception_v3_google-1a9a5a14.pth"
+    datapath: '~/.cache/torch/hub/checkpoints/inception_v3_google-1a9a5a14.pth'
+    overwrite: false
+    eval: true
+
+train_ImageNet256:
+  args:
+    dataset: I256_hdf5
+    data_root: "datasets/ImageNet_hdf5/ILSVRC256.hdf5"
+    num_workers: 8
+    batch_size: 256
+    num_G_accumulations: 8
+    num_D_accumulations: 8
+    num_D_steps: 1
+    G_lr: 1e-4
+    D_lr: 4e-4
+    D_B2: 0.999
+    G_B2: 0.999
+    G_attn: '64'
+    D_attn: '64'
+    G_nl: inplace_relu
+    D_nl: inplace_relu
+    SN_eps: 1e-6
+    BN_eps: 1e-5
+    adam_eps: 1e-6
+    G_ortho: 0.0
+    G_shared: true
+    G_init: ortho
+    D_init: ortho
+    hier: true
+    dim_z: 120
+    shared_dim: 128
+    G_eval_mode: true
+    G_ch: 96
+    D_ch: 96
+    ema: true
+    use_ema: true
+    ema_start: 20000
+    test_every: 500
+    save_every: 500
+    num_best_copies: 4
+    num_save_copies: 2
+    seed: 0
+    use_multiepoch_sampler: true
+    experiment_name: exp
+    which_train_fn: "exp.biggan.train_fns"
+  inception_file: "datasets/ImageNet_hdf5/\
+      I256_inception_moments.npz"
+  root_obs: *root_obs
+  modelarts_download: *modelarts_download
+
+
+eval_ImageNet256:
+  base: train_ImageNet256
+  evaluation:
+    eval: true
+#    G_ema_best_IS0: IS=186.595 FID=13.7203
+#    G_ema_best_IS1: IS=186.787 FID=14.9485
+#    G_ema_best_IS2: IS=182.898 FID=12.7075
+#    G_ema_best_IS3: IS=184.798 FID=13.2080
+    G_ema_model: "datasets/BigGAN256_20210114_105144_100/exp/\
+      G_ema_best_IS0.pth"
+#    G_ema_best_FID0: IS=139.955 FID=10.5410
+#    G_ema_best_FID1: IS=147.871 FID=10.1230
+#    G_ema_best_FID2: IS=143.985 FID=10.2869
+#    G_ema_best_FID3: IS=144.876 FID=10.2910
+#    G_ema_model: "datasets/omniInrGAN128_20201228_085846_586/exp/\
+#      G_ema_best_FID0.pth"
+
+eval_ImageNet256_val:
+  base: train_ImageNet256
+  inception_file: datasets/ImageNet_hdf5/I256_val_inception_moments.npz
+  evaluation:
+    eval: true
+#    G_ema_best_IS0: IS=186.595 FID=14.2054
+#    G_ema_best_IS1: IS=186.787 FID=15.4182
+#    G_ema_best_IS2: IS=182.898 FID=13.1161
+#    G_ema_best_IS3: IS=184.798 FID=13.6800
+    G_ema_model: "datasets/BigGAN256_20210114_105144_100/exp/\
+      G_ema_best_IS0.pth"
+#    G_ema_best_FID0: IS=139.955 FID=9.8892
+#    G_ema_best_FID1: IS=147.871 FID=9.6738
+#    G_ema_best_FID2: IS=143.985 FID=9.7531
+#    G_ema_best_FID3: IS=144.876 FID=9.7606
+#    G_ema_model: "datasets/omniInrGAN128_20201228_085846_586/exp/\
+#      G_ema_best_FID0.pth"
+
+
+eval_truncation_ImageNet256:
+  args:
+    dataset: I256_hdf5
+    batch_size: 256
+    accumulate_stats: false
+  weights_root: "datasets/BigGAN256_20210114_105144_100/"
+  pretrained_model: "datasets/BigGAN256_20210114_105144_100/exp/\
+    G_ema_best_IS1.pth"
+  inception_file: datasets/ImageNet_hdf5/I128_inception_moments.npz
+
+
+

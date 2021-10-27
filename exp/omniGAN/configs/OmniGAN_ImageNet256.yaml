@@ -1,0 +1,161 @@
+_build_omnigan_generator_256: &_build_omnigan_generator_256
+  register_modules:
+    - exp.omniGAN.models.OmniGAN
+  name: exp.omniGAN.models.OmniGAN.Generator
+  G_ch: 96
+  dim_z: 120
+  bottom_width: 4
+  resolution: 256
+  G_kernel_size: 3
+  G_attn: '64'
+  n_classes: 1000
+  G_shared: true
+  shared_dim: 128
+  hier: true
+  cross_replica: false
+  mybn: false
+  G_init: 'ortho'
+  G_param: 'SN'
+  norm_style: 'bn'
+  BN_eps: 1.e-5
+  SN_eps: 1.e-6
+  G_fp16: false
+  G_lr: 1.e-4
+  G_B1: 0.
+  G_B2: 0.999
+  weight_decay: 0.001
+  adam_eps: 1.e-6
+  skip_init: false
+  no_optim: false
+
+train_ImageNet256:
+  args:
+    dataset: I256_hdf5
+    data_root: "datasets/ImageNet_hdf5/ILSVRC256.hdf5"
+    num_workers: 8
+    batch_size: 256
+    num_G_accumulations: 1
+    num_D_accumulations: 1
+    num_D_steps: 1
+    G_lr: 1e-4
+    D_lr: 4e-4
+    D_B2: 0.999
+    G_B2: 0.999
+    G_attn: '64'
+    D_attn: '64'
+    G_nl: inplace_relu
+    D_nl: inplace_relu
+    SN_eps: 1e-6
+    BN_eps: 1e-5
+    adam_eps: 1e-6
+    G_ortho: 0.0
+    G_shared: true
+    G_init: ortho
+    D_init: ortho
+    hier: true
+    dim_z: 120
+    shared_dim: 128
+    G_eval_mode: true
+    G_ch: 96
+    D_ch: 96
+    ema: true
+    use_ema: true
+    ema_start: 20000
+    test_every: 2000
+    save_every: 1000
+    num_best_copies: 4
+    num_save_copies: 2
+    seed: 0
+    use_multiepoch_sampler: true
+    experiment_name: exp
+    model: exp.omniGAN.BigGAN_omni
+    which_train_fn: exp.omniGAN.train_fns
+  Discriminator:
+    output_dim: 1002
+    weight_decay: 0.00001
+  Generator:
+    weight_decay: 0.001
+  omni_loss:
+    mode: p_and_n
+    gamma: 1.0
+    margin: 0.0
+  inception_file: "datasets/ImageNet_hdf5/\
+      I256_inception_moments.npz"
+  root_obs: "s3://bucket-7001/ZhouPeng"
+  modelarts_download:
+    data_root:
+      datapath_obs: "{global_cfg.root_obs}/keras/\
+        ImageNet_hdf5/ILSVRC256.hdf5"
+      datapath: "{global_cfg.data_root}"
+      overwrite: false
+      eval: true
+    inception_file:
+      datapath_obs: "{global_cfg.root_obs}/keras/\
+      ImageNet_hdf5/I256_inception_moments.npz"
+      datapath: "{global_cfg.inception_file}"
+      overwrite: false
+      eval: true
+    inceptionv3:
+      datapath_obs: "{global_cfg.root_obs}/keras/Omni-GAN-ImageNet/\
+              datasets/inception_v3_google-1a9a5a14.pth"
+      datapath: '~/.cache/torch/hub/checkpoints/inception_v3_google-1a9a5a14.pth'
+      overwrite: false
+      eval: true
+
+
+train_ImageNet256_official:
+  base: train_ImageNet256
+  args:
+    dim_z: 140
+    G_attn: '0'
+    D_attn: '0'
+
+
+eval_ImageNet256:
+  base: train_ImageNet256
+  evaluation:
+    eval: true
+#    G_ema_best_IS0: IS=314.946 FID=5.8361
+#    G_ema_best_IS1: IS=299.951 FID=6.2289
+#    G_ema_best_IS2: IS=290.142 FID=6.4173
+#    G_ema_best_IS3: IS=301.840 FID=6.1331
+    G_ema_model: "datasets/omniGAN256_20210116_220737_831/exp/\
+          G_ema_best_IS0.pth"
+#      G_ema_best_IS3.pth"
+#    G_ema_best_FID0: IS=299.018 FID=6.1940
+#    G_ema_best_FID1: IS=301.808 FID=6.1489
+#    G_ema_best_FID2: IS=298.561 FID=6.1857
+#    G_ema_best_FID3: IS=293.278 FID=6.1567
+#    G_ema_model: "datasets/omniGAN128_20201220_173111_408/exp/\
+#          G_ema_best_FID0.pth"
+
+
+eval_ImageNet256_val:
+  base: train_ImageNet256
+  inception_file: datasets/ImageNet_hdf5/I256_val_inception_moments.npz
+  evaluation:
+    eval: true
+#    G_ema_best_IS0: IS=301.808 FID=6.8389
+#    G_ema_best_IS1: IS=299.951 FID=6.8916
+#    G_ema_best_IS2: IS=290.142 FID=6.9898
+#    G_ema_best_IS3: IS=301.840 FID=6.8210
+    G_ema_model: "datasets/omniGAN256_20210116_220737_831/exp/\
+          G_ema_best_IS0.pth"
+#      G_ema_best_IS3.pth"
+#    G_ema_best_FID0: IS=299.018 FID=6.8574
+#    G_ema_best_FID1: IS=301.808 FID=6.8389
+#    G_ema_best_FID2: IS=298.561 FID=6.8471
+#    G_ema_best_FID3: IS=293.278 FID=6.7354
+#    G_ema_model: "datasets/omniGAN128_20201220_173111_408/exp/\
+#          G_ema_best_FID0.pth"
+
+
+eval_truncation_ImageNet256:
+  Generator: *_build_omnigan_generator_256
+  args:
+    batch_size: 256
+    accumulate_stats: false
+  weights_root: "datasets/omniGAN256_20210116_220737_831/"
+  pretrained_model: "datasets/omniGAN256_20210116_220737_831/exp/\
+    G_ema_best_IS3.pth"
+  inception_file: datasets/ImageNet_hdf5/I256_inception_moments.npz

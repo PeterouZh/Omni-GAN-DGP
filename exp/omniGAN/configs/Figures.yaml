@@ -1,0 +1,422 @@
+save_OmniGAN_ImageNet128_IS:
+  xlabel: "Real images shown to $D$"
+  ylabel: "IS"
+  fontsize:
+    tick_fs: 10
+    xylabel_fs: 17
+    legend_size: 17
+    text_font: 15
+#  clip_x:
+#    - 0
+#    - 24500096
+  properties:
+    xlim:
+      - -5000000
+      - 480000000
+    ylim:
+      - -130
+      - 270
+  get_min_value: false
+#  add_auxi_label: true
+  data_pickle: "datasets/data/OmniGAN_ImageNet128_results.pkl"
+  data_index: 1
+  hline_y: 93.3
+  lines:
+    official_biggan:
+      key: "official_BigGAN"
+      color: 'blue'
+      properties:
+#        label: "[IS=  93.09] BigGAN (provided by the author)"
+        label: "BigGAN (provided by the author)"
+        lw: 2
+#        ls: "--"
+#        marker: "."
+    biggan_reproduce:
+      key: "20201129_223356_351-BigGAN-ch.96"
+      color: 'beauty_green'
+      vline_x: 372735000
+      text: "     14 days \n(8*v100 GPUs)"
+      text_x: 360000000
+      text_y: 72
+      properties:
+#        label: "[IS=104.57] BigGAN (reproduced by us)"
+        label: "BigGAN (reproduced by us)"
+        lw: 2
+    omnigan:
+      key: "20201220_173111_408-OmniGAN-ch.96-num_D_steps.1"
+      color: 'blue_violet'
+      vline_x: 21504000
+      text: "     1 day \n(8*v100 GPUs)"
+      text_x: 22000000
+      text_y: 72
+      properties:
+#        label: "[IS=190.94] Omni-GAN"
+        label: "Omni-GAN"
+        lw: 3
+    omni_inr_gan:
+      key: '20201228_085846_586-OmniInrGAN128'
+      color: 'dark_red'
+      properties:
+#        label: "[IS=262.86] Omni-INR-GAN"
+        label: "Omni-INR-GAN"
+        lw: 4
+
+  saved_file: "save_OmniGAN_ImageNet128_IS.pdf"
+
+save_OmniGAN_ImageNet128_FID:
+  xlabel: "Real images shown to $D$"
+  ylabel: "FID"
+  fontsize:
+    tick_fs: 10
+    xylabel_fs: 17
+    legend_size: 17
+    text_font: 15
+#  clip_x:
+#    - 0
+#    - 24500096
+  properties:
+    xlim:
+      - 0
+      - 478000000
+    ylim:
+      - 5
+      - 50
+  get_min_value: true
+#  add_auxi_label: true
+  data_pickle: "datasets/data/OmniGAN_ImageNet128_results.pkl"
+  data_index: 0
+  hline_y: 93.3
+  lines:
+    official_biggan:
+      key: "official_BigGAN"
+      color: 'blue'
+      properties:
+        label: "BigGAN (provided by the author)"
+        lw: 2
+#        ls: "--"
+#        marker: "."
+    biggan_reproduce:
+      key: "20201129_223356_351-BigGAN-ch.96"
+      color: 'beauty_green'
+      vline_x: 372735000
+      text: "     14 days \n(8*v100 GPUs)"
+      text_x: 365000000
+      text_y: 80
+      properties:
+        label: "BigGAN (reproduced by us)"
+        lw: 2
+    omnigan:
+      key: "20201220_173111_408-OmniGAN-ch.96-num_D_steps.1"
+      color: 'blue_violet'
+      vline_x: 21504000
+      text: "     1 day \n(8*v100 GPUs)"
+      text_x: 21504000
+      text_y: 80
+      properties:
+        label: "Omni-GAN"
+        lw: 3
+    omni_inr_gan:
+      key: '20201228_085846_586-OmniInrGAN128'
+      color: 'dark_red'
+      properties:
+#        label: "[IS=262.86] Omni-INR-GAN"
+        label: "Omni-INR-GAN"
+        lw: 4
+
+  saved_file: "save_OmniGAN_ImageNet128_FID.pdf"
+
+
+save_OmniGAN_ImageNet256_IS:
+  xlabel: "Real images shown to $D$"
+  ylabel: "IS"
+  title_text: 'Training is not over yet!'
+  fontsize:
+    tick_fs: 10
+    xylabel_fs: 17
+    legend_size: 17
+    text_font: 15
+#  clip_x:
+#    - 0
+#    - 24500096
+  properties:
+    xlim:
+      - 0
+      - 335000000
+#    ylim:
+#      - 0
+#      - 30
+  get_min_value: false
+#  add_auxi_label: true
+  xlim: &xlim256_IS [0, 326000000]
+  lines:
+    biggan_reproduce:
+      pkl_file: "datasets/data/OmniGAN_ImageNet256_results.pkl"
+      dict_index: IS_ImageNet256
+      data_index: "20210114_105144_100-BigGAN256"
+      color: 'beauty_green'
+      xlim: *xlim256_IS
+      properties:
+        label: "BigGAN"
+        lw: 2
+    omnigan:
+      pkl_file: "datasets/data/OmniGAN_ImageNet256_results.pkl"
+      dict_index: IS_ImageNet256
+      data_index: "20210116_220737_831-OmniGAN256-Gwd.1e-4-nd.2"
+      color: 'blue_violet'
+      xlim: *xlim256_IS
+      properties:
+        label: "Omni-GAN"
+#        label: "[IS=] Omni-GAN"
+        lw: 3
+    omni_inr_gan:
+      pkl_file: "datasets/data/OmniGAN_ImageNet256_results.pkl"
+      dict_index: IS_ImageNet256
+      data_index: "20210126_161550_248-OmniInrGAN256-Gwd.1e-4-nd.2-bs.128x2"
+      color: 'dark_red'
+      xlim: *xlim256_IS
+      properties:
+        label: "Omni-INR-GAN"
+        #        label: "[IS=] Omni-GAN"
+        lw: 4
+
+  saved_file: "save_OmniGAN_ImageNet256_IS.pdf"
+
+save_OmniGAN_ImageNet256_FID:
+  xlabel: "Real images shown to $D$"
+  ylabel: "FID"
+  title_text: 'Training is not over yet!'
+  fontsize:
+    tick_fs: 10
+    xylabel_fs: 17
+    legend_size: 17
+    text_font: 15
+#  clip_x:
+#    - 0
+#    - 330000000
+  properties:
+    xlim:
+      - 0
+      - 335000000
+    ylim:
+      - 0
+      - 50
+  get_min_value: true
+#  add_auxi_label: true
+  data_pickle: "datasets/data/OmniGAN_ImageNet256_results.pkl"
+  data_index: 0
+#  hline_y: 93.3
+  xlim: &xlim [0, 330000000]
+  lines:
+    biggan_reproduce:
+      pkl_file: "datasets/data/OmniGAN_ImageNet256_results.pkl"
+      dict_index: FID_ImageNet256
+      data_index: "20210114_105144_100-BigGAN256"
+      color: 'beauty_green'
+      xlim: *xlim
+      properties:
+        label: "BigGAN"
+        lw: 2
+    omnigan:
+      pkl_file: "datasets/data/OmniGAN_ImageNet256_results.pkl"
+      dict_index: FID_ImageNet256
+      data_index: "20210116_220737_831-OmniGAN256-Gwd.1e-4-nd.2"
+      color: 'blue_violet'
+      xlim: *xlim
+      properties:
+        label: "Omni-GAN"
+        lw: 3
+    omni_inr_gan:
+      pkl_file: "datasets/data/OmniGAN_ImageNet256_results.pkl"
+      dict_index: FID_ImageNet256
+      data_index: "20210126_161550_248-OmniInrGAN256-Gwd.1e-4-nd.2-bs.128x2"
+      color: 'dark_red'
+      xlim: *xlim
+      properties:
+        label: "Omni-INR-GAN"
+        lw: 4
+
+  saved_file: "save_OmniGAN_ImageNet256_FID.pdf"
+
+
+truncation_imagenet128:
+  xlabel: "IS"
+  ylabel: "FID"
+  fontsize:
+    tick_fs: 10
+    xylabel_fs: 17
+    legend_size: 17
+    text_fs: 15
+#  clip_x:
+#    - 0
+#    - 24500096
+  properties:
+    xlim:
+      - 40
+      - 390
+    ylim:
+      - 5
+      - 50
+  get_min_value: false
+#  add_auxi_label: true
+  data_pickle: "datasets/data/OmniGAN_ImageNet128_results.pkl"
+  data_index: 1
+  lines:
+    BigGAN:
+      data_pkl: datasets/data/truncation_imagenet128.pkl
+      dict_index: FID_IS_trunc_128
+      data_index: "20210311_191554_011-BigGAN128-G_ema_best_IS1-acc_stat.f"
+      color: 'beauty_green'
+      text:
+        xy: [190, 18]
+        label: "BigGAN"
+      properties:
+        label: "BigGAN"
+        lw: 2
+#        ls: "--"
+#        marker: "."
+    OmniGAN:
+      data_pkl: datasets/data/truncation_imagenet128.pkl
+      dict_index: FID_IS_trunc_128
+      data_index: "20210311_185444_554-OmniGAN128-G_ema_best_IS0-acc_stat.f"
+      color: 'blue_violet'
+      text:
+        xy: [258, 15]
+        label: "Omni-GAN"
+      properties:
+        label: "Omni-GAN"
+        lw: 3
+    OmniINRGAN:
+      data_pkl: datasets/data/truncation_imagenet128.pkl
+      dict_index: FID_IS_trunc_128
+      data_index: "20210311_192119_616-OmniINRGAN128-G_ema_best_FID2-acc_stat.f"
+      color: 'dark_red'
+      text:
+        xy: [290, 8.6]
+        label: "Omni-INR-GAN"
+        kwargs:
+          weight: bold
+      properties:
+        label: "Omni-INR-GAN"
+        lw: 4
+
+  saved_file: "truncation_imagenet128.pdf"
+
+truncation_imagenet256:
+  xlabel: "IS"
+  ylabel: "FID"
+  fontsize:
+    tick_fs: 10
+    xylabel_fs: 17
+    legend_size: 17
+    text_fs: 15
+#  clip_x:
+#    - 0
+#    - 24500096
+  properties:
+    xlim:
+      - 40
+      - 460
+    ylim:
+      - 0
+      - 50
+  get_min_value: false
+#  add_auxi_label: true
+  data_pickle: "datasets/data/OmniGAN_ImageNet128_results.pkl"
+  data_index: 1
+  lines:
+    BigGAN:
+      data_pkl: datasets/data/FID_IS_truncation_imagenet256.pkl
+      dict_index: FID_IS_truncation_imagenet256
+      data_index: "20210311_222431_377-BigGAN256-G_ema_best_FID1-acc_stat.f"
+      color: 'beauty_green'
+      text:
+        xy: [200, 30]
+        label: "BigGAN"
+      properties:
+        label: "BigGAN"
+        lw: 2
+#        ls: "--"
+#        marker: "."
+    OmniGAN:
+      data_pkl: datasets/data/FID_IS_truncation_imagenet256.pkl
+      dict_index: FID_IS_truncation_imagenet256
+      data_index: "20210312_184913_281-OmniGAN256-G_ema_best_FID3-acc_stat.f"
+      color: 'blue_violet'
+      text:
+        xy: [250, 12]
+        label: "Omni-GAN"
+      properties:
+        label: "Omni-GAN"
+        lw: 3
+    OmniINRGAN:
+      data_pkl: datasets/data/FID_IS_truncation_imagenet256.pkl
+      dict_index: FID_IS_truncation_imagenet256
+      data_index: "20210313_130514_741-OmniINRGAN256-G_ema_best_FID2-acc_stat.f"
+      color: 'dark_red'
+      text:
+        xy: [340, 5]
+        label: "Omni-INR-GAN"
+        kwargs:
+          weight: bold
+      properties:
+        label: "Omni-INR-GAN"
+        lw: 4
+
+  saved_file: "truncation_imagenet256.pdf"
+
+
+Generator_OmniINRGAN_256: &Generator_OmniINRGAN_256
+    register_modules:
+      - exp.omni_inr_GAN.models.inr_omniGAN
+    name: exp.omni_inr_GAN.models.inr_omniGAN.Generator
+    G_ch: 96
+    dim_z: 120
+    bottom_width: 4
+    resolution: 256
+    G_kernel_size: 3
+    G_attn: '64'
+    n_classes: 1000
+    G_shared: true
+    shared_dim: 128
+    hier: true
+    cross_replica: false
+    mybn: false
+    G_init: 'ortho'
+    G_param: 'SN'
+    norm_style: 'bn'
+    BN_eps: 1.e-5
+    SN_eps: 1.e-6
+    G_fp16: false
+    skip_init: false
+    no_optim: false
+    inr_net_cfg:
+      register_modules:
+        - exp.omni_inr_GAN.models.net_mlp
+      name: exp.omni_inr_GAN.models.net_mlp.MLP
+      hidden_list: [96, 96]
+    optim_cfg:
+      lr: 1.e-4
+      betas: [0., 0.999]
+      eps: 1.e-6
+      weight_decay: 0.001
+
+sample_OmniINRGAN_256_classes:
+  Generator: *Generator_OmniINRGAN_256
+  pretrained_model: "datasets/omniInrGAN256_20210126_161550_248/exp/\
+    G_ema_best_FID2.pth"
+  batch_size: 1
+  n_classes: 1000
+  z_var: 1
+  num_per_class: 5
+  shapes:
+    H: [256, 128]
+    W: [128, 256]
+    SR: [512, 512]
+    SRHD: [1024, 1024]
+
+
+
+
+
+
+
