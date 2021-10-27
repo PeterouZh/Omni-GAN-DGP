@@ -1,0 +1,42 @@
+save_OmniGAN_ImageNet128_IS:
+  xlabel: "Real images shown to $D$"
+  ylabel: "IS"
+  fontsize:
+    tick_fs: 15
+    xylabel_fs: 20
+    legend_size: 11
+#  clip_x:
+#    - 0
+#    - 24500096
+#  properties:
+#    xlim:
+#      - 0
+#      - 24960000
+#    ylim:
+#      - 0
+#      - 30
+  get_min_value: false
+#  add_auxi_label: true
+  data_pickle: "datasets/data/OmniGAN_ImageNet128_results.pkl"
+  data_index: 1
+  lines:
+    official_biggan:
+      key: "official_BigGAN"
+      color: 'blue'
+      properties:
+        label: "BigGAN (provided by the author)"
+#        ls: "--"
+#        marker: "."
+    biggan_reproduce:
+      key: "20201129_223356_351-BigGAN-ch.96"
+      color: 'beauty_green'
+      properties:
+        label: "BigGAN (reproduced by us)"
+    omnigan:
+      key: "20201220_173111_408-OmniGAN-ch.96-num_D_steps.1"
+      color: 'dark_red'
+      properties:
+        label: "Omni-GAN"
+
+  saved_file: "save_OmniGAN_ImageNet128_IS.pdf"
+

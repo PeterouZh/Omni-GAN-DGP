@@ -1,0 +1,44 @@
+ddp_calculate_fid_stat_CIFAR10:
+  build_dataloader:
+    register_modules:
+      - template_lib.v2.GAN.datasets.cifar10
+    name: DDPDataLoaderCIFAR10
+    distributed: true
+    batch_size: 32
+    shuffle: false
+    num_workers: 0
+    dataset_cfg:
+      name: CIFAR10
+      root: datasets/cifar10
+      train: true
+  GAN_metric:
+    register_modules:
+      - template_lib.v2.GAN.evaluation.pytorch_FID_IS_score
+    name: PyTorchFIDISScore
+    torch_fid_stat: "datasets/torch_fid_stat/fid_stats_pytorch_cifar10_train_32.npz"
+    num_inception_images: 50000
+  save_fid_stat: true
+
+
+ddp_calculate_fid_stat_CIFAR100:
+  build_dataloader:
+    register_modules:
+      - template_lib.v2.GAN.datasets.cifar100
+    name: DDPDataLoaderCIFAR100
+    distributed: true
+    batch_size: 32
+    shuffle: false
+    num_workers: 0
+    dataset_cfg:
+      name: CIFAR100
+      root: datasets/cifar100
+      train: true
+  GAN_metric:
+    register_modules:
+      - template_lib.v2.GAN.evaluation.pytorch_FID_IS_score
+    name: PyTorchFIDISScore
+    torch_fid_stat: "datasets/torch_fid_stat/fid_stats_pytorch_cifar100_train_32.npz"
+    num_inception_images: 50000
+  save_fid_stat: true
+
+

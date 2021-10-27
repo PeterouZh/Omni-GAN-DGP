@@ -1,0 +1,21 @@
+_BASE_: ./base.yaml
+
+test0:
+  key1: '01'
+  key2: '02'
+
+test1:
+  base: test0
+  key2: '12'
+  key3: '13'
+
+test2:
+  base: test1
+  key3: '23'
+  key4: '24'
+  key5:
+    sub1: '51'
+
+ddp:
+  base: test2
+  test_ddp: test_ddp

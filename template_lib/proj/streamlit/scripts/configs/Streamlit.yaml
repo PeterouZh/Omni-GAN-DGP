@@ -1,0 +1,27 @@
+show_video:
+  port: 8501
+  start_web: false
+  sidebar:
+    sidebar_name: "Streamlit"
+  image_list:
+    image_list_file:
+      - ""
+    columns: ['path', ]
+    show_dataframe: false
+    default_index: 0
+  model_cfg:
+    register_modules:
+      - test
+    name: test
+  mode:
+    - show_video
+  show_video:
+    num_video: 7
+  image_list_files:
+    image_list_files:
+      image_list:
+        image_list_file: datasets/image_list.txt
+
+
+
+

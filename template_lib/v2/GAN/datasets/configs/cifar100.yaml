@@ -1,0 +1,15 @@
+DDPDataLoaderCIFAR100:
+  register_modules:
+    - template_lib.v2.GAN.datasets.cifar100
+  name: DDPDataLoaderCIFAR100
+  distributed: true
+  batch_size: 4
+  shuffle: false
+  num_workers: 0
+  dataset_cfg:
+    name: CIFAR100
+    root: datasets/cifar100
+    train: true
+
+
+

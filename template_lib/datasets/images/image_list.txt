@@ -1,0 +1,2 @@
+template_lib/datasets/images/zebra_GT_target_input.png
+template_lib/datasets/images/zebra_GT_target_origin.png

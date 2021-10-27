@@ -1,0 +1,14 @@
+DDPDataLoaderCIFAR10:
+  register_modules:
+    - template_lib.v2.GAN.datasets.cifar10
+  name: DDPDataLoaderCIFAR10
+  distributed: true
+  batch_size: 4
+  shuffle: false
+  num_workers: 0
+  dataset_cfg:
+    name: CIFAR10
+    root: datasets/cifar10
+    train: true
+
+

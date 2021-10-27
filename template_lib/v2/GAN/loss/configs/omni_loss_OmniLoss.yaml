@@ -1,0 +1,6 @@
+omni_GAN:
+  register_modules:
+    - template_lib.v2.GAN.loss.omni_loss
+  name: "template_lib.v2.GAN.loss.omni_loss.OmniLoss"
+
+

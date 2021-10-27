@@ -1,0 +1,8 @@
+template_lib/proj/pytorch/examples/cam_img/test_img_1.png
+template_lib/proj/pytorch/examples/cam_img/test_img_2.png
+template_lib/proj/pytorch/examples/cam_img/test_img_3.png
+template_lib/proj/pytorch/examples/cam_img/test_img_4.png
+template_lib/proj/pytorch/examples/cam_img/test_img_5.png
+template_lib/proj/pytorch/examples/cam_img/test_img_6.png
+template_lib/proj/pytorch/examples/cam_img/test_img_7.png
+template_lib/proj/pytorch/examples/cam_img/test_img_8.png

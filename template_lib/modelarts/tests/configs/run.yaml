@@ -1,0 +1,6 @@
+run:
+  root_obs: "s3://bucket-7001/ZhouPeng/"
+  time_interval: 0.8
+  command:
+    - bash template_lib/modelarts/scripts/test_bash.sh 0,1,2,3,4,5,6,7
+#    - 'cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c && echo cpus: &&  cat /proc/cpuinfo| grep "physical id"| sort| uniq| wc -l && cat /proc/cpuinfo| grep "cpu cores"| uniq && echo threads: && cat /proc/cpuinfo| grep "processor"| wc -l'

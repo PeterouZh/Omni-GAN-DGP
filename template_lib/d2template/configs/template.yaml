@@ -1,0 +1,15 @@
+train:
+  args:
+    num_gpus: 1
+  start:
+    name: "do_train"
+    dataset_name: "swiss_roll_5000"
+    IMS_PER_BATCH: 1
+    ASPECT_RATIO_GROUPING: false
+    NUM_WORKERS: 0
+    dataset_mapper:
+      name: "PointsDatasetMapper"
+    max_epoch: 1000
+    checkpoint_period: "iter_every_epoch"
+  trainer:
+    name: 'TrainerPoints'

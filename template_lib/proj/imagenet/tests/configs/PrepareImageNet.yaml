@@ -1,0 +1,60 @@
+extract_ImageNet_1000x50:
+  data_dir: "datasets/ImageNet/"
+  saved_dir: "datasets/ImageNet_1000x50/"
+  num_per_class: 50
+  root_obs: "s3://bucket-7001/ZhouPeng"
+  modelarts_download:
+    data_dir:
+      datapath_obs: "{global_cfg.root_obs}/keras/\
+        ImageNet"
+      datapath: "{global_cfg.data_dir}"
+      overwrite: false
+      eval: true
+  modelarts_upload:
+    saved_dir_train:
+      datapath_obs: "{global_cfg.root_obs}/keras/\
+          ImageNet_1000x50/train"
+      datapath: "{global_cfg.saved_dir}/train"
+      overwrite: false
+      eval: true
+    saved_dir_val:
+      datapath_obs: "{global_cfg.root_obs}/keras/\
+              ImageNet_1000x50/val"
+      datapath: "{global_cfg.data_dir}/val"
+      overwrite: false
+      eval: true
+
+
+ImageNet100_CMC_class_file_append_classname:
+  class_list_file: "template_lib/proj/imagenet/\
+    imagenet100_CMC.txt"
+  saved_class_list_file: "template_lib/proj/imagenet/\
+    imagenet100_CMC_subdir2name.txt"
+
+
+extract_ImageNet100_CMC:
+  data_dir: "datasets/ImageNet/"
+  saved_dir: "datasets/ImageNet100_CMC/"
+  class_list_file: "template_lib/proj/imagenet/\
+    imagenet100_CMC_subdir2name.txt"
+  root_obs: "s3://bucket-7001/ZhouPeng"
+  modelarts_download:
+    data_dir:
+      datapath_obs: "{global_cfg.root_obs}/keras/\
+        ImageNet"
+      datapath: "{global_cfg.data_dir}"
+      overwrite: false
+      eval: true
+  modelarts_upload:
+    saved_dir_train:
+      datapath_obs: "{global_cfg.root_obs}/keras/\
+          ImageNet100_CMC/train"
+      datapath: "{global_cfg.saved_dir}/train"
+      overwrite: false
+      eval: true
+    saved_dir_val:
+      datapath_obs: "{global_cfg.root_obs}/keras/\
+          ImageNet100_CMC/val"
+      datapath: "{global_cfg.saved_dir}/val"
+      overwrite: false
+      eval: true

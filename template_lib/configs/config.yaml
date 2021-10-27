@@ -1,0 +1,28 @@
+test_command:
+  test: test
+
+plot_lines_figure:
+  xlabel: "Epoch"
+  ylabel: "FID"
+  fontsize:
+    tick_fs: 14
+    xylabel_fs: 20
+    legend_size: 12
+  properties:
+    xlim:
+      - 0
+      - 336
+    ylim:
+      - 0
+      - 30
+  get_min_value: true
+  add_auxi_label: false
+  lines:
+    cbn_index_0:
+      result_dir: "results/CIFAR10_BigGAN_v1/train_cifar10_CBN_position_\
+      20200908-11_23_31_588"
+      sub_path: "textdir/evaltf.ma0.FID_tf.log"
+      properties:
+        label: "CBN in block 0"
+        marker: "."
+  saved_file: "cbn_index012.pdf"
