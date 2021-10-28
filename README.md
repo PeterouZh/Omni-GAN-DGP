@@ -2,14 +2,14 @@
 
 
 This repository contains the code for the paper, [Omni-GAN: On the Secrets of cGANs and Beyond](https://arxiv.org/abs/2011.13074). </br >
-In particular, it contains the code for the ImageNet and DGP experiments. <\br >
+In particular, it contains the code for the ImageNet and DGP experiments. </br >
 We recommend that you refer to another project, [Omni-GAN-PyTorch](https://github.com/PeterouZh/Omni-GAN-PyTorch), to learn Omni-GAN quickly.
 
 
 
 ## My tasks
 
-⬜️ Training code for ImageNet experiments. To do by the end of this month (2021-10-19)  
+✔️ Training code for ImageNet experiments. To do by the end of this month (2021-10-19)  
 ⬜️ The inversion code for DGP with Omni-INR-GAN experiments.
 
 
