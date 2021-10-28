@@ -2,7 +2,8 @@
 
 
 This repository contains the code for the paper, [Omni-GAN: On the Secrets of cGANs and Beyond](https://arxiv.org/abs/2011.13074). </br >
-In particular, it contains the code for the ImageNet and DGP experiments.
+In particular, it contains the code for the ImageNet and DGP experiments. <\br >
+We recommend that you refer to another project, [Omni-GAN-PyTorch](https://github.com/PeterouZh/Omni-GAN-PyTorch), to learn Omni-GAN quickly.
 
 
 
@@ -104,9 +105,7 @@ python scripts/calculate_inception_moments.py \
 
 ```
 
-## Omni-GAN
-
-### Evaluation
+## Evaluation (Omni-GAN)
 
 ```bash
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
@@ -121,7 +120,7 @@ python scripts/train.py \
 
 ```
 
-### Train
+## Train (Omni-GAN)
 ```bash
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 export PYTHONPATH=./BigGAN_Pytorch_lib:./
@@ -131,6 +130,12 @@ python scripts/train.py \
   --tl_outdir results/train_ImageNet128 \
   --tl_opts args.data_root datasets/ImageNet_hdf5/ILSVRC128.hdf5 \
     inception_file  datasets/ImageNet_hdf5/I128_inception_moments.npz
+
+```
+
+## For 256x256 (Omni-GAN)
+```bash
+
 
 ```
 
