@@ -64,6 +64,9 @@ python scripts/make_hdf5.py \
     saved_hdf5_file datasets/ImageNet_hdf5/ILSVRC128.hdf5
 
 ```
+
+Note: `data_root`: the path of ImageNet training images.
+
 - Prepare inception moment file for evaluation of FID
 ```bash
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
@@ -101,7 +104,9 @@ python scripts/calculate_inception_moments.py \
 
 ```
 
-## Evaluation
+## Omni-GAN
+
+### Evaluation
 
 ```bash
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
@@ -115,6 +120,22 @@ python scripts/train.py \
 
 
 ```
+
+### Train
+```bash
+export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+export PYTHONPATH=./BigGAN_Pytorch_lib:./
+python scripts/train.py \
+  --tl_config_file configs/omnigan_imagenet128.yaml \
+  --tl_command train_ImageNet128 \
+  --tl_outdir results/train_ImageNet128 \
+  --tl_opts args.data_root datasets/ImageNet_hdf5/ILSVRC128.hdf5 \
+    inception_file  datasets/ImageNet_hdf5/I128_inception_moments.npz
+
+```
+
+## Omni-INR-GAN
+
 
 
 ## Acknowledgments
