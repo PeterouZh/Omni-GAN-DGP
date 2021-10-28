@@ -5,3 +5,36 @@ make_hdf5_ImageNet128:
   index_filename: "datasets/ImageNet_hdf5/I128_index.npz"
   saved_hdf5_file: "datasets/ImageNet_hdf5/ILSVRC128.hdf5"
 
+calculate_inception_moments_ImageNet128:
+  dataset: I128_hdf5
+  data_root: "datasets/ImageNet_hdf5/ILSVRC128.hdf5"
+  num_workers: 8
+  shuffle: false
+  batch_size: 1024
+  saved_inception_file: "datasets/ImageNet_hdf5/\
+    I128_inception_moments.npz"
+  debug_num_batches: "float('inf')"
+
+
+make_hdf5_ImageNet256:
+  dataset: I256
+  batch_size: 256
+  data_root: "datasets/ImageNet/train"
+  index_filename: "datasets/ImageNet_hdf5/I256_index.npz"
+  saved_hdf5_file: "datasets/ImageNet_hdf5/ILSVRC256.hdf5"
+
+calculate_inception_moments_ImageNet256:
+  dataset: I256_hdf5
+  data_root: "datasets/ImageNet_hdf5/ILSVRC256.hdf5"
+  num_workers: 8
+  shuffle: false
+  batch_size: 1024
+  pin_memory: false
+  saved_inception_file: "datasets/ImageNet_hdf5/\
+    I256_inception_moments.npz"
+  debug_num_batches: "float('inf')"
+
+
+
+
+

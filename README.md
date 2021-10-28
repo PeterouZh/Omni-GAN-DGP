@@ -41,6 +41,7 @@ conda create -y --name omnigan python=3.6.7
 conda activate omnigan
 
 pip install torch==1.8.2+cu102 torchvision==0.9.2+cu102 -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html
+python -m pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu102/torch1.8/index.html
 
 pip install --no-cache-dir tl2==0.0.3
 pip install --no-cache-dir -r requirements.txt
@@ -52,6 +53,7 @@ pip install --no-cache-dir -r requirements.txt
 
 - Make hdf5 file
 ```bash
+export CUDA_VISIBLE_DEVICES=0
 export PYTHONPATH=./BigGAN_Pytorch_lib:./
 python scripts/make_hdf5.py \
   --tl_config_file configs/make_hdf5.yaml \
@@ -60,6 +62,57 @@ python scripts/make_hdf5.py \
   --tl_opts data_root datasets/ImageNet/train \
     index_filename datasets/ImageNet_hdf5/I128_index.npz \
     saved_hdf5_file datasets/ImageNet_hdf5/ILSVRC128.hdf5
+
+```
+- Prepare inception moment file for evaluation of FID
+```bash
+export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+export PYTHONPATH=./BigGAN_Pytorch_lib:./
+python scripts/calculate_inception_moments.py \
+  --tl_config_file configs/make_hdf5.yaml \
+  --tl_command calculate_inception_moments_ImageNet128 \
+  --tl_outdir results/calculate_inception_moments_ImageNet128 \
+  --tl_opts data_root datasets/ImageNet_hdf5/ILSVRC128.hdf5 \
+    saved_inception_file datasets/ImageNet_hdf5/I128_inception_moments.npz
+
+```
+
+- For 256x256
+```bash
+export CUDA_VISIBLE_DEVICES=0
+export PYTHONPATH=./BigGAN_Pytorch_lib:./
+python scripts/make_hdf5.py \
+  --tl_config_file configs/make_hdf5.yaml \
+  --tl_command make_hdf5_ImageNet256 \
+  --tl_outdir results/make_hdf5_ImageNet256 \
+  --tl_opts data_root datasets/ImageNet/train \
+    index_filename datasets/ImageNet_hdf5/I256_index.npz \
+    saved_hdf5_file datasets/ImageNet_hdf5/ILSVRC256.hdf5
+
+
+export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+export PYTHONPATH=./BigGAN_Pytorch_lib:./
+python scripts/calculate_inception_moments.py \
+  --tl_config_file configs/make_hdf5.yaml \
+  --tl_command calculate_inception_moments_ImageNet256 \
+  --tl_outdir results/calculate_inception_moments_ImageNet256 \
+  --tl_opts data_root datasets/ImageNet_hdf5/ILSVRC256.hdf5 \
+    saved_inception_file datasets/ImageNet_hdf5/I256_inception_moments.npz
+
+```
+
+## Evaluation
+
+```bash
+export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+export PYTHONPATH=./BigGAN_Pytorch_lib:./
+python scripts/train.py \
+  --tl_config_file configs/omnigan_imagenet128.yaml \
+  --tl_command eval_ImageNet128 \
+  --tl_outdir results/eval_ImageNet128 \
+  --tl_opts inception_file  datasets/ImageNet_hdf5/I128_inception_moments.npz \
+    evaluation.G_ema_model datasets/pretrained/omnigan_r128_G_ema.pth
+
 
 ```
 
