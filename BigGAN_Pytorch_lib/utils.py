@@ -16,7 +16,6 @@ import datetime
 import json
 import pickle
 from argparse import ArgumentParser
-import animal_hash
 import functools
 
 import torch
@@ -26,6 +25,7 @@ import torchvision
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 
+import animal_hash
 import datasets as dset
 from exp.omni_inr_GAN.datasets import ImageFolderVar
 

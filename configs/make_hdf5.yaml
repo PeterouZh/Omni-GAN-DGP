@@ -1,0 +1,7 @@
+make_hdf5_ImageNet128:
+  dataset: I128
+  batch_size: 256
+  data_root: "datasets/ImageNet/train"
+  index_filename: "datasets/ImageNet_hdf5/I128_index.npz"
+  saved_hdf5_file: "datasets/ImageNet_hdf5/ILSVRC128.hdf5"
+
